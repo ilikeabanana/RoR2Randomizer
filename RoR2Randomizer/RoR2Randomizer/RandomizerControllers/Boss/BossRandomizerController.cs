@@ -26,6 +26,8 @@ namespace RoR2Randomizer.RandomizerControllers.Boss
             SingletonHelper.Assign(ref _instance, this);
 
             Mithrix.Initialize();
+            FalseSon.Initialize();
+            SolusWing.Initialize();
             Voidling.Initialize();
             Aurelionite.Initialize();
             LunarScav.Initialize();
@@ -38,7 +40,9 @@ namespace RoR2Randomizer.RandomizerControllers.Boss
             base.OnDestroy();
 
             Mithrix.Uninitialize();
+            FalseSon.Uninitialize();
             Voidling.Uninitialize();
+            SolusWing.Uninitialize();
             Aurelionite.Uninitialize();
             LunarScav.Uninitialize();
             AlloyWorshipUnit.Uninitialize();

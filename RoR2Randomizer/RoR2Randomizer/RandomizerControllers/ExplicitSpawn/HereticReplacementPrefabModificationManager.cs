@@ -114,10 +114,22 @@ namespace RoR2Randomizer.RandomizerControllers.ExplicitSpawn
                     GameObject.Destroy(interactionDriver);
                 });
             }
-
-            float targetInteractionRadius = Caches.CharacterBodyRadius[replacementPrefab];
-
             const float REFERENCE_RADIUS = 1.82f;
+            float targetInteractionRadius;
+            try
+            {
+                targetInteractionRadius = Caches.CharacterBodyRadius[replacementPrefab];
+            }
+            catch (System.Collections.Generic.KeyNotFoundException)
+            {
+                targetInteractionRadius = REFERENCE_RADIUS; // sane fallback, same units as REFERENCE_RADIUS above
+
+#if DEBUG
+                Log.Debug($"Could not determine body radius for {replacementPrefab.name}, using fallback {targetInteractionRadius}");
+#endif
+            }
+
+            
             const float m = (REFERENCE_INTERACT_DISTANCE / REFERENCE_RADIUS) - 1f;
 
             const float BIAS = 4f;

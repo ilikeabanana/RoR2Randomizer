@@ -87,7 +87,7 @@ namespace RoR2Randomizer.Patches.ItemRandomizer
 
                 cursor.Emit(OpCodes.Brtrue, afterGiveItemLabel);
 
-                if (cursor.TryGotoNext(MoveType.After, x => x.MatchCallOrCallvirt(SymbolExtensions.GetMethodInfo<Inventory>(_ => _.GiveItem(default(ItemIndex), default)))))
+                if (cursor.TryGotoNext(MoveType.After, x => x.MatchCallOrCallvirt(SymbolExtensions.GetMethodInfo<Inventory>(_ => _.GiveItemPermanent(default(ItemIndex), default)))))
                 {
                     cursor.MarkLabel(afterGiveItemLabel);
                 }

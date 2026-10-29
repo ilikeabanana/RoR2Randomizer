@@ -44,10 +44,10 @@ namespace RoR2Randomizer.Extensions
 
         public static void GiveItemIfMissing(this Inventory inventory, ItemIndex item, int count = 1)
         {
-            int currentItemCount = inventory.GetItemCount(item);
+            int currentItemCount = inventory.GetItemCountEffective(item);
             if (currentItemCount < count)
             {
-                inventory.GiveItem(item, count - currentItemCount);
+                inventory.GiveItemPermanent(item, count - currentItemCount);
             }
         }
     }

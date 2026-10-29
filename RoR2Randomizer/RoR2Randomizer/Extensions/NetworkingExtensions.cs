@@ -46,11 +46,11 @@ namespace RoR2Randomizer.Extensions
 
         public static DamageType? ReadNullableDamageType(this NetworkReader reader)
         {
-            return reader.readNullable(NetworkExtensions.ReadDamageType);
+            return reader.readNullable(r => (DamageType)r.ReadInt32());
         }
         public static void WriteNullableDamageType(this NetworkWriter writer, DamageType? damageType)
         {
-            writer.writeNullable(damageType, NetworkExtensions.Write);
+            writer.writeNullable(damageType, (w, v) => w.Write((int)v));
         }
 
         public static Vector3? ReadNullableVector3(this NetworkReader reader)

@@ -23,7 +23,7 @@ namespace RoR2Randomizer.Patches.ItemRandomizer
         {
             ILCursor c = new ILCursor(il);
 
-            if (c.TryGotoNext(x => x.MatchCallOrCallvirt(AccessTools.DeclaredPropertySetter(typeof(GenericPickupController), nameof(GenericPickupController.NetworkpickupIndex)))))
+            if (c.TryGotoNext(x => x.MatchCallOrCallvirt(AccessTools.DeclaredPropertySetter(typeof(GenericPickupController), nameof(GenericPickupController.Network_pickupState)))))
             {
 #if DEBUG
                 c.Emit(Mono.Cecil.Cil.OpCodes.Ldarg_0);

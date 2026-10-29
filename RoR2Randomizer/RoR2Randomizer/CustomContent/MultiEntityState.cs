@@ -65,8 +65,10 @@ namespace RoR2Randomizer.CustomContent
 
         public void Initialize(StateMachineSubStatesData data)
         {
-            _subStates = data.StateTypes.Select(EntityStateCatalog.InstantiateState)
-                                        .Select(state => new SubState(state)).ToArray();
+            _subStates = data.StateTypes
+                .Select(type => EntityStateCatalog.InstantiateState(data.GetType()))
+                .Select(state => new SubState(state))
+                .ToArray();
 
             _alwaysExecuteEnter = data.AlwaysExecuteEnter;
 

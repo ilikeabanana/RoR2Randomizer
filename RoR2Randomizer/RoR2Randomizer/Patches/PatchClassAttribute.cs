@@ -84,12 +84,16 @@ namespace RoR2Randomizer.Patches
 
         static readonly InitializeOnAccess<PatchClassInfo[]> _patchClasses = new InitializeOnAccess<PatchClassInfo[]>(() =>
         {
-            return (from attr in GetInstances<PatchClassAttribute>()
+            return (from attr in GetInstances<PatchClassAttribute>() ?? Enumerable.Empty<HG.Reflection.SearchableAttribute>()
                     select new PatchClassInfo((Type)attr.target)).Distinct(PatchClassInfo.Comparer).ToArray();
         });
 
         public static void ApplyAllPatches()
         {
+            var instances = GetInstances<PatchClassAttribute>();
+#if DEBUG
+            Log.Debug($"Found {instances?.Count() ?? 0} patch class attributes");
+#endif
             foreach (PatchClassInfo patchClass in _patchClasses.Get)
             {
                 try

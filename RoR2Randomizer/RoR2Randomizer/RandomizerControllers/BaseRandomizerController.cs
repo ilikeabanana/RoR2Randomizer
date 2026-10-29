@@ -40,6 +40,8 @@ namespace RoR2Randomizer.RandomizerControllers
 
         protected virtual void OnDestroy()
         {
+
+
             if (isNetworked)
             {
                 NetworkingManager.UnregisterMessageProvider(this);

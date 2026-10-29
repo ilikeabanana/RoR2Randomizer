@@ -5,6 +5,7 @@ using RoR2Randomizer.RandomizerControllers.ExplicitSpawn;
 #if !DISABLE_ITEM_RANDOMIZER
 using RoR2Randomizer.RandomizerControllers.Item;
 using RoR2Randomizer.RandomizerControllers.Item_Tier;
+
 #endif
 #if !DISABLE_HOLDOUT_ZONE_RANDOMIZER
 using RoR2Randomizer.RandomizerControllers.HoldoutZone;

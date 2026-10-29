@@ -19,7 +19,7 @@ namespace RoR2Randomizer.Patches.Debug
         static bool _enabled;
 
         delegate bool orig_CostTypeDef_IsAffordable(object self, CostTypeDef costTypeDef, CostTypeDef.IsAffordableContext context);
-        delegate void orig_CostTypeDef_PayCost(object self, CostTypeDef costTypeDef, CostTypeDef.PayCostContext context);
+        delegate void orig_CostTypeDef_PayCost(object self, CostTypeDef.PayCostContext context, CostTypeDef.PayCostResults result);
 
         static readonly Hook[] _lunarCoinDelegateHooks = new Hook[2];
 
@@ -46,12 +46,12 @@ namespace RoR2Randomizer.Patches.Debug
             CostTypeDef.PayCostDelegate payCost = lunarCoinCostType.payCost;
             if (payCost != null)
             {
-                _lunarCoinDelegateHooks[1] = new Hook(payCost.Method, (orig_CostTypeDef_PayCost orig, object self, CostTypeDef costTypeDef, CostTypeDef.PayCostContext context) =>
+                _lunarCoinDelegateHooks[1] = new Hook(payCost.Method, (orig_CostTypeDef_PayCost orig, object self, CostTypeDef.PayCostContext context, CostTypeDef.PayCostResults result) =>
                 {
                     if (_enabled)
                         return;
 
-                    orig(self, costTypeDef, context);
+                    orig(self, context, result);
                 });
                 _lunarCoinDelegateHooks[1].Apply();
             }

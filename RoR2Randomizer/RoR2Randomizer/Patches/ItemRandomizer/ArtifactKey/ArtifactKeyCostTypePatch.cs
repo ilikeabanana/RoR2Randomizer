@@ -114,7 +114,7 @@ namespace RoR2Randomizer.Patches.ItemRandomizer.ArtifactKey
             }
         }
 
-        static void ArtifactKeyCostType_PayCost(Action<object, CostTypeDef, CostTypeDef.PayCostContext> orig, object self, CostTypeDef costTypeDef, CostTypeDef.PayCostContext context)
+        static void ArtifactKeyCostType_PayCost(Action<object, CostTypeDef.PayCostContext, CostTypeDef.PayCostResults> orig, object self, CostTypeDef.PayCostContext context, CostTypeDef.PayCostResults result)
         {
             if (ItemRandomizerController.IsEnabled)
             {
@@ -130,7 +130,7 @@ namespace RoR2Randomizer.Patches.ItemRandomizer.ArtifactKey
                 }
             }
 
-            orig(self, costTypeDef, context);
+            orig(self, context, result);
         }
     }
 }

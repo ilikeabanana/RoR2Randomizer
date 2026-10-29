@@ -1,4 +1,5 @@
-﻿using EntityStates.BrotherMonster;
+﻿using EntityStates;
+using EntityStates.BrotherMonster;
 using HG;
 using R2API;
 using RoR2;
@@ -75,11 +76,24 @@ namespace RoR2Randomizer.RandomizerControllers.Boss.BossReplacementInfo
                     {
                         if (bodyState.state != null)
                         {
-                            bodyState.SetState(EntityStateCatalog.InstantiateState(BossRandomizerController.Mithrix.MithrixHurtInitialState));
-                        }
-                        else
-                        {
-                            bodyState.initialStateType = BossRandomizerController.Mithrix.MithrixHurtInitialState;
+                            Type hurtStateType = BossRandomizerController.Mithrix.MithrixHurtInitialState.stateType;
+                            EntityState newState = hurtStateType != null
+                                ? EntityStateCatalog.InstantiateState(hurtStateType)
+                                : null;
+
+                            if (newState != null)
+                            {
+                                bodyState.SetState(newState);
+                                Log.Warning($"hurt state now: {bodyState.state?.GetType().Name}, stealCtrl on body: {_body.GetComponentInChildren<ItemStealController>()}");
+
+                                GameObject vanillaBody = Caches.MasterPrefabs["BrotherHurtMaster"].bodyPrefab;
+                                var vanillaSM = EntityStateMachine.FindByCustomName(vanillaBody, "Body");
+                                Log.Warning($"vanilla initial state: {vanillaSM.initialStateType.stateType?.Name}, vanilla has stealCtrl: {vanillaBody.GetComponentInChildren<ItemStealController>()}");
+                            }
+                            else
+                            {
+                                bodyState.initialStateType = BossRandomizerController.Mithrix.MithrixHurtInitialState;
+                            }
                         }
                     }
                     else

@@ -15,13 +15,28 @@ namespace RoR2Randomizer.Patches.ExplicitSpawnRandomizer.Heretic
         static void Apply()
         {
             IL.RoR2.CharacterMaster.OnInventoryChanged += CharacterMaster_OnInventoryChanged;
-            On.RoR2.CharacterMaster.TransformBody += CharacterMaster_TransformBody;
+            On.RoR2.CharacterMaster.TransformBody_string += CharacterMaster_TransformBody_string;
+        }
+
+        private static void CharacterMaster_TransformBody_string(On.RoR2.CharacterMaster.orig_TransformBody_string orig, CharacterMaster self, string bodyName)
+        {
+            if (ExplicitSpawnRandomizerController.IsActive && ConfigManager.ExplicitSpawnRandomizer.RandomizeHeretic && !self.GetComponent<ExplicitSpawnReplacementInfo>())
+            {
+                if (CharacterReplacements.IsAnyForcedCharacterModeEnabled ||
+                    (ExplicitSpawnRandomizerController.TryGetOriginalBodyName(bodyName, out string originalBody) &&
+                     originalBody == Constants.BodyNames.HERETIC_NAME))
+                {
+                    ExplicitSpawnRandomizerController.RegisterSpawnedReplacement(self.gameObject, Caches.Masters.Heretic);
+                }
+            }
+
+            orig(self, bodyName);
         }
 
         static void Cleanup()
         {
             IL.RoR2.CharacterMaster.OnInventoryChanged -= CharacterMaster_OnInventoryChanged;
-            On.RoR2.CharacterMaster.TransformBody -= CharacterMaster_TransformBody;
+            On.RoR2.CharacterMaster.TransformBody_string -= CharacterMaster_TransformBody_string;
         }
 
         static void CharacterMaster_OnInventoryChanged(ILContext il)
@@ -86,19 +101,5 @@ namespace RoR2Randomizer.Patches.ExplicitSpawnRandomizer.Heretic
             }
         }
 
-        static void CharacterMaster_TransformBody(On.RoR2.CharacterMaster.orig_TransformBody orig, CharacterMaster self, string bodyName)
-        {
-            if (ExplicitSpawnRandomizerController.IsActive && ConfigManager.ExplicitSpawnRandomizer.RandomizeHeretic && !self.GetComponent<ExplicitSpawnReplacementInfo>())
-            {
-                if (CharacterReplacements.IsAnyForcedCharacterModeEnabled ||
-                    (ExplicitSpawnRandomizerController.TryGetOriginalBodyName(bodyName, out string originalBody) &&
-                     originalBody == Constants.BodyNames.HERETIC_NAME))
-                {
-                    ExplicitSpawnRandomizerController.RegisterSpawnedReplacement(self.gameObject, Caches.Masters.Heretic);
-                }
-            }
-
-            orig(self, bodyName);
-        }
     }
 }

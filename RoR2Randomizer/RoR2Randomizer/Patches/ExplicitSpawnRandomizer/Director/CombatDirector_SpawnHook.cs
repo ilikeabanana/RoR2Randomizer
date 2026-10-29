@@ -15,12 +15,12 @@ namespace RoR2Randomizer.Patches.ExplicitSpawnRandomizer.Director
     {
         static void Apply()
         {
-            IL.RoR2.CombatDirector.Spawn += CombatDirector_Spawn;
+            IL.RoR2.CombatDirector.Spawn_SpawnArgs += CombatDirector_Spawn;
         }
 
         static void Cleanup()
         {
-            IL.RoR2.CombatDirector.Spawn -= CombatDirector_Spawn;
+            IL.RoR2.CombatDirector.Spawn_SpawnArgs -= CombatDirector_Spawn;
         }
 
         static void CombatDirector_Spawn(ILContext il)

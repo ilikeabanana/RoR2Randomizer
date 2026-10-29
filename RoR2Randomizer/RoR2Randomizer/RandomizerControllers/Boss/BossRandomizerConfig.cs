@@ -12,6 +12,8 @@ namespace RoR2Randomizer.RandomizerControllers.Boss
 
         public readonly BoolConfigValue RandomizeVoidling;
 
+        public readonly BoolConfigValue RandomizeFalseSon;
+
         public readonly BoolConfigValue RandomizeAurelionite;
 
         public readonly BoolConfigValue RandomizeLunarScav;
@@ -26,6 +28,7 @@ namespace RoR2Randomizer.RandomizerControllers.Boss
             RandomizeMithrixPhase2 = new BoolConfigValue(getEntry("Randomize Mithrix Phase 2", "Randomizes the character type of all the characters spawned during Mithrix phase 2", true));
 
             RandomizeVoidling = new BoolConfigValue(getEntry("Randomize Voidling", "Randomizes the character type of Voidling", true));
+            RandomizeFalseSon = new BoolConfigValue(getEntry("Randomize False Son", "Randomizes the character type of False Son", true));
 
             RandomizeAurelionite = new BoolConfigValue(getEntry("Randomize Aurelionite", "Randomizes the character type of Aurelionite", true));
 

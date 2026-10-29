@@ -1,6 +1,7 @@
 ﻿using HarmonyLib;
 using MonoMod.Cil;
 using RoR2;
+using RoR2.Items;
 using System.Reflection;
 
 namespace RoR2Randomizer.Patches.Reverse
@@ -13,7 +14,7 @@ namespace RoR2Randomizer.Patches.Reverse
             setNumDroneParts(numParts, inventory, CharacterBody.BodyFlags.Mechanical, numParts);
         }
 
-        [HarmonyPatch(nameof(RoR2.DroneWeaponsBehavior.UpdateMinionInventory))]
+        [HarmonyPatch(nameof(RoR2.DroneWeaponsBehavior.UpdateMinionInventory), new System.Type[] {typeof(Inventory), typeof(CharacterBody.BodyFlags), typeof(int) })]
         [HarmonyReversePatch]
         static void setNumDroneParts(int numParts, Inventory inventory, CharacterBody.BodyFlags bodyFlags, int newStack)
         {
@@ -21,7 +22,7 @@ namespace RoR2Randomizer.Patches.Reverse
             {
                 ILCursor c = new ILCursor(il);
 
-                FieldInfo DroneWeaponsBehavior_stack_FI = AccessTools.DeclaredField(typeof(CharacterBody.ItemBehavior), nameof(CharacterBody.ItemBehavior.stack));
+                FieldInfo DroneWeaponsBehavior_stack_FI = AccessTools.DeclaredField(typeof(BaseItemBodyBehavior), nameof(BaseItemBodyBehavior.stack));
                 while (c.TryGotoNext(x => x.MatchLdarg(0),
                                      x => x.MatchLdfld(DroneWeaponsBehavior_stack_FI)))
                 {

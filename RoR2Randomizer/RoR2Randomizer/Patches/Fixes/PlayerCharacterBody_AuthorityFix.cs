@@ -20,14 +20,14 @@ namespace RoR2Randomizer.Patches.Fixes
             return NetworkIdentity_get_localPlayerAuthority(orig(self), self);
         }, new HookConfig { ManualApply = true });
 
-        static readonly ILHook NetworkIdentity_OnStartServer_ILHook = new ILHook(AccessTools.DeclaredMethod(typeof(NetworkIdentity), nameof(NetworkIdentity.OnStartServer)), static il =>
+        static readonly ILHook NetworkIdentity_OnStartServer_ILHook = new ILHook(AccessTools.DeclaredMethod(typeof(NetworkIdentity), "OnStartServer"), static il =>
         {
             ILCursor c = new ILCursor(il);
 
             int numPatches = 0;
             while (c.TryGotoNext(MoveType.After,
                                  x => x.MatchLdarg(0),
-                                 x => x.MatchLdfld<NetworkIdentity>(nameof(NetworkIdentity.m_LocalPlayerAuthority))))
+                                 x => x.MatchLdfld<NetworkIdentity>(nameof(NetworkIdentity.localPlayerAuthority))))
             {
                 c.Emit(OpCodes.Ldarg_0);
                 c.Emit(OpCodes.Call, SymbolExtensions.GetMethodInfo(() => NetworkIdentity_get_localPlayerAuthority(default, default)));

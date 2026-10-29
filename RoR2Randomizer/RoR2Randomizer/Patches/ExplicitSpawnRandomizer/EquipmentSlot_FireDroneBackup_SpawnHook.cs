@@ -29,7 +29,7 @@ namespace RoR2Randomizer.Patches.ExplicitSpawnRandomizer
 
             if (c.TryFindNext(out ILCursor[] foundCursors,
                               x => x.MatchLdstr("Prefabs/CharacterMasters/DroneBackupMaster"),
-                              x => x.MatchCallOrCallvirt(SymbolExtensions.GetMethodInfo(() => LegacyResourcesAPI.Load<GameObject>(default)))))
+                              x => x.MatchCallOrCallvirt(SymbolExtensions.GetMethodInfo(() => Resources.Load<GameObject>(default)))))
             {
                 ILCursor last = foundCursors[foundCursors.Length - 1];
                 last.Index++;

@@ -24,7 +24,7 @@ namespace RoR2Randomizer.Patches.MultiEntityStatePatches
         static void CharacterDeathBehavior_OnDeath(ILContext il)
         {
             ILCursor c = new ILCursor(il);
-            if (c.TryGotoNext(x => x.MatchCall(SymbolExtensions.GetMethodInfo(() => EntityStateCatalog.InstantiateState(default(SerializableEntityStateType))))))
+            if (c.TryGotoNext(x => x.MatchCall(SymbolExtensions.GetMethodInfo(() => EntityStateCatalog.InstantiateState(default(EntityStateIndex))))))
             {
                 c.Index++; // Move after InstantiateState call
 

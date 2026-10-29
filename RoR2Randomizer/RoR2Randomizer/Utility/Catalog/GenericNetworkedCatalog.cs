@@ -89,8 +89,27 @@ namespace RoR2Randomizer.Utility.Catalog
                 Log.Debug(LOG_PREFIX_TYPE + $"from client with identifier: {required}");
 #endif
 
-                appendIdentifier(ref required, true);
-                this.TrySendAll(NetworkDestination.Clients);
+                bool foundExisting = false;
+                for (int i = 0; i < _identifiersCount; i++)
+                {
+                    if (_identifiers[i].Equals(required, false))
+                    {
+                        required.Index = _identifiers[i].Index;
+                        foundExisting = true;
+                        break;
+                    }
+                }
+
+                if (!foundExisting)
+                {
+                    appendIdentifier(ref required, true);
+                }
+
+                // Immediately broadcast the updated catalog payload back to all clients so indices match universally
+                foreach (NetworkMessageBase msg in GetNetMessages())
+                {
+                    msg.SendTo(NetworkDestination.Clients);
+                }
             }
         }
     }

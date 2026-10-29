@@ -230,20 +230,20 @@ namespace RoR2Randomizer.Utility.EnemyInfoEquipmentDisplay
             _rectTransform = (RectTransform)transform;
         }
 
-        public override void Awake()
+        protected override void Awake()
         {
             base.Awake();
             cacheComponents();
             _equipments = Array.Empty<EquipmentIndex>();
         }
 
-        public override void OnDestroy()
+        protected override void OnDestroy()
         {
             SetSubscribedInventory(null);
             base.OnDestroy();
         }
 
-        public override void OnEnable()
+        protected override void OnEnable()
         {
             base.OnEnable();
             if (_inventory)
@@ -290,7 +290,7 @@ namespace RoR2Randomizer.Utility.EnemyInfoEquipmentDisplay
             requestUpdateDisplay();
         }
 
-        public override void OnRectTransformDimensionsChange()
+        protected override void OnRectTransformDimensionsChange()
         {
             base.OnRectTransformDimensionsChange();
 

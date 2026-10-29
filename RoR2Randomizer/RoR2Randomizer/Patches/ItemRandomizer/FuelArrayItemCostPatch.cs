@@ -69,7 +69,7 @@ namespace RoR2Randomizer.Patches.ItemRandomizer
             _patchActive = false;
         }
 
-        static void FuelArrayCostType_PayCost(Action<object, CostTypeDef, CostTypeDef.PayCostContext> orig, object self, CostTypeDef costType, CostTypeDef.PayCostContext context)
+        static void FuelArrayCostType_PayCost(Action<CostTypeDef.PayCostContext, CostTypeDef.PayCostResults> orig, CostTypeDef.PayCostContext context, CostTypeDef.PayCostResults result)
         {
             if (_fuelArrayPickupIndex.isValid &&
                 ItemRandomizerController.TryGetReplacementPickupIndex(_fuelArrayPickupIndex, out PickupIndex fuelArrayReplacementIndex))
@@ -89,9 +89,8 @@ namespace RoR2Randomizer.Patches.ItemRandomizer
                 }
             }
 
-            orig(self, costType, context);
+            orig(context, result);
         }
-
         static bool FuelArrayCostType_IsAffordable_On(Func<object, CostTypeDef, CostTypeDef.IsAffordableContext, bool> orig, object self, CostTypeDef costTypeDef, CostTypeDef.IsAffordableContext context)
         {
             if (_fuelArrayPickupIndex.isValid &&

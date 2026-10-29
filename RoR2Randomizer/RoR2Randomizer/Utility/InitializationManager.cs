@@ -3,6 +3,7 @@ using RoR2Randomizer.Patches;
 using RoR2Randomizer.RandomizerControllers;
 using RoR2Randomizer.RandomizerControllers.Projectile.Orbs;
 using System;
+using System.Collections;
 using System.Reflection;
 using UnityEngine;
 
@@ -16,6 +17,13 @@ namespace RoR2Randomizer.Utility
 
         public static void Init()
         {
+            Main.Instance.StartCoroutine(DelayedInitialize());
+        }
+
+        public static IEnumerator DelayedInitialize()
+        {
+            yield return new WaitForSeconds(1); // One Second delay
+
             _harmonyInstance = new Harmony(Main.PluginGUID);
             _harmonyInstance.PatchAll(Assembly.GetExecutingAssembly());
 
@@ -23,17 +31,28 @@ namespace RoR2Randomizer.Utility
 
             _controllersRoot = new GameObject(Main.PluginName + ".Controllers");
             UnityEngine.Object.DontDestroyOnLoad(_controllersRoot);
+            _controllersRoot.hideFlags = HideFlags.DontSaveInEditor;
 
-            foreach (HG.Reflection.SearchableAttribute attr in RandomizerControllerAttribute.GetInstances<RandomizerControllerAttribute>())
+            var instances = RandomizerControllerAttribute.GetInstances<RandomizerControllerAttribute>();
+            if (instances != null)
             {
-                if (attr != null && attr.target is Type type)
+                foreach (HG.Reflection.SearchableAttribute attr in instances)
                 {
-                    _controllersRoot.AddComponent(type);
+                    if (attr != null && attr.target is Type type)
+                    {
+                        _controllersRoot.AddComponent(type);
 #if DEBUG
-                    Log.Debug($"Added randomizer controller {type.Name} to main object");
+                        Log.Debug($"Added randomizer controller {type.Name} to main object");
 #endif
+                    }
                 }
             }
+#if DEBUG
+            else
+            {
+                Log.Debug("GetInstances<RandomizerControllerAttribute> returned null — assembly scan hasn't registered this type yet.");
+            }
+#endif
 
             OrbTargetDummyObjectMarker.InitNetworkPrefab();
         }

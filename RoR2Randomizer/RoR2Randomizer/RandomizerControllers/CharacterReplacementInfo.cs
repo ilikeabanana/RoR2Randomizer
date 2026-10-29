@@ -1,5 +1,6 @@
 ﻿using R2API.Networking;
 using RoR2;
+using RoR2Randomizer.Configuration;
 using RoR2Randomizer.Extensions;
 using RoR2Randomizer.Networking;
 using RoR2Randomizer.Networking.Generic;
@@ -167,7 +168,7 @@ namespace RoR2Randomizer.RandomizerControllers
                 ItemIndex adaptiveArmorItemIndex = RoR2Content.Items.AdaptiveArmor.itemIndex;
                 if (originalGivePickupsOnStart && originalGivePickupsOnStart.HasItems(adaptiveArmorItemIndex, out int originalAdaptiveArmorCount))
                 {
-                    inventory.GiveItem(adaptiveArmorItemIndex, originalAdaptiveArmorCount);
+                    inventory.GiveItemPermanent(adaptiveArmorItemIndex, originalAdaptiveArmorCount);
                 }
             }
         }

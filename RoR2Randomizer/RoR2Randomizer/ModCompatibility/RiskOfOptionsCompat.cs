@@ -6,7 +6,7 @@ using UnityModdingUtility;
 namespace RoR2Randomizer.ModCompatibility
 {
     public static class RiskOfOptionsCompat
-    {
+    { 
         public static readonly InitializeOnAccess<bool> IsEnabled = new InitializeOnAccess<bool>(() => Chainloader.PluginInfos.ContainsKey(Constants.RISK_OF_OPTIONS_GUID));
 
         static readonly InitializeOnAccess<Sprite> _iconSprite = new InitializeOnAccess<Sprite>(() =>
@@ -20,7 +20,7 @@ namespace RoR2Randomizer.ModCompatibility
             }
             else
             {
-                Log.Warning("LoadImage failed");
+                Log.Warning("LoadImage failed"); 
             }
 
             return null;
@@ -28,7 +28,7 @@ namespace RoR2Randomizer.ModCompatibility
 
         public static void Setup()
         {
-            RiskOfOptions.ModSettingsManager.SetModDescription("A Risk of Rain 2 randomizer mod.\n\nMost of the settings will only take effect when the next run is started.");
+            RiskOfOptions.ModSettingsManager.SetModDescription("A Remade Risk of Rain 2 randomizer mod.\n\nMost of the settings will only take effect when the next run is started.");
 
             Sprite sprite = _iconSprite;
             if (sprite)

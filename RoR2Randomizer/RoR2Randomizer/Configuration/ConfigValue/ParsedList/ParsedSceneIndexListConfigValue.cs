@@ -12,7 +12,8 @@ namespace RoR2Randomizer.Configuration.ConfigValue.ParsedList
         {
             if (!SceneCatalog.availability.available)
             {
-                SceneCatalog.availability.onAvailable += tryParseToList;
+                SceneCatalog.availability.CallWhenAvailable(() => tryParseToList());
+                //SceneCatalog.availability.onAvailable += tryParseToList;
             }
         }
 

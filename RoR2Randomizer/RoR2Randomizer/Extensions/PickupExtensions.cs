@@ -19,7 +19,7 @@ namespace RoR2Randomizer.Extensions
             {
                 if (inventory)
                 {
-                    inventory.GiveItem(pickupDef.itemIndex, count);
+                    inventory.GiveItemPermanent(pickupDef.itemIndex, count);
                     notify = true;
                 }
                 else
@@ -98,7 +98,8 @@ namespace RoR2Randomizer.Extensions
             {
                 if (notify && master.playerCharacterMasterController)
                 {
-                    GenericPickupController.SendPickupMessage(master, pickupDef.pickupIndex);
+                    
+                    GenericPickupController.SendPickupMessage(master, new UniquePickup(pickupDef.pickupIndex));
                 }
 
                 return true;
@@ -124,7 +125,7 @@ namespace RoR2Randomizer.Extensions
             {
                 if (inventory)
                 {
-                    return inventory.GetItemCount(pickupDef.itemIndex);
+                    return inventory.GetItemCountEffective(pickupDef.itemIndex);
                 }
             }
             else if (pickupDef.IsEquipment())
@@ -160,10 +161,10 @@ namespace RoR2Randomizer.Extensions
             {
                 if (inventory)
                 {
-                    count = Mathf.Min(count, inventory.GetItemCount(pickupDef.itemIndex));
+                    count = Mathf.Min(count, inventory.GetItemCountPermanent(pickupDef.itemIndex));
                     if (count > 0)
                     {
-                        inventory.RemoveItem(pickupDef.itemIndex, count);
+                        inventory.RemoveItemPermanent(pickupDef.itemIndex, count);
                     }
                 }
             }

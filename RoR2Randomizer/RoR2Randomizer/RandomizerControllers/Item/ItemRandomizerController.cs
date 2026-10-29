@@ -11,6 +11,7 @@ using RoR2Randomizer.PrefabMarkers;
 using RoR2Randomizer.Utility;
 using System.Collections.Generic;
 using System.Linq;
+using UnityEngine;
 using UnityEngine.Networking;
 
 namespace RoR2Randomizer.RandomizerControllers.Item
@@ -115,9 +116,18 @@ namespace RoR2Randomizer.RandomizerControllers.Item
 
         static readonly RunSpecific<bool> _hasReceivedPickupIndexReplacementsFromServer = new RunSpecific<bool>();
 
-        static readonly RunSpecific<IndexReplacementsCollection> _pickupIndexReplacements = new RunSpecific<IndexReplacementsCollection>(static (out IndexReplacementsCollection result) =>
+        static readonly RunSpecific<IndexReplacementsCollection> _pickupIndexReplacements = new RunSpecific<IndexReplacementsCollection>(tryComputePickupIndexReplacements);
+
+        // Extracted into a named method (instead of an inline lambda) so it can also be
+        // invoked from Awake() below to self-heal if the RunSpecific's one-shot onRunStart
+        // callback fired before this controller's Awake() had a chance to assign _instance.
+        static bool tryComputePickupIndexReplacements(out IndexReplacementsCollection result)
         {
-            if (IsEnabled)
+            // _instance may not be assigned yet if Run.Start() (and therefore this RunSpecific's
+            // onRunStart callback) fires before this controller's own Awake() has run - e.g. on
+            // scene load / network spawn ordering. Bail out safely instead of NREing on _instance.RNG;
+            // Awake() will retry this once _instance becomes available.
+            if (IsEnabled && _instance)
             {
                 IEnumerable<int> pickupIndicesToRandomize = _pickupIndicesToRandomize.Where(i =>
                 {
@@ -140,7 +150,7 @@ namespace RoR2Randomizer.RandomizerControllers.Item
                 result = default;
                 return false;
             }
-        });
+        }
 
         protected override bool isNetworked => true;
 
@@ -156,6 +166,14 @@ namespace RoR2Randomizer.RandomizerControllers.Item
             SyncItemReplacements.OnReceive += SyncItemReplacements_OnReceive;
 
             SingletonHelper.Assign(ref _instance, this);
+
+            // If the run already started before _instance was assigned above, RunSpecific's
+            // onRunStart callback would have run with _instance still null and (safely) bailed
+            // out without setting a value. Retry now that _instance is actually available.
+            if (IsEnabled && !_pickupIndexReplacements.HasValue && tryComputePickupIndexReplacements(out IndexReplacementsCollection result))
+            {
+                _pickupIndexReplacements.Value = result;
+            }
         }
 
         protected override void OnDestroy()

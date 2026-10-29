@@ -16,6 +16,6 @@ namespace RoR2Randomizer.Utility.Patching
         public static readonly MethodInfo EntityState_get_skillLocator = AccessTools.PropertyGetter(typeof(EntityState), nameof(EntityState.skillLocator));
 
         public static readonly MethodInfo EntityStateCatalog_InstantiateState_Type_MI = SymbolExtensions.GetMethodInfo(() => EntityStateCatalog.InstantiateState(default(Type)));
-        public static readonly MethodInfo EntityStateCatalog_InstantiateState_SerializableEntityStateType_MI = SymbolExtensions.GetMethodInfo(() => EntityStateCatalog.InstantiateState(default(SerializableEntityStateType)));
+        public static readonly MethodInfo EntityStateCatalog_InstantiateState_SerializableEntityStateType_MI = SymbolExtensions.GetMethodInfo(() => EntityStateCatalog.InstantiateState(default(EntityStateIndex)));
     }
 }

@@ -34,7 +34,7 @@ namespace RoR2Randomizer.Patches.Item
             ILCursor[] foundCursors;
             while (c.TryFindNext(out foundCursors,
                                  x => x.MatchLdsfld(typeof(RoR2Content.Items), nameof(RoR2Content.Items.AutoCastEquipment)),
-                                 x => x.MatchCallOrCallvirt(SymbolExtensions.GetMethodInfo<Inventory>(_ => _.GetItemCount(default(ItemDef))))))
+                                 x => x.MatchCallOrCallvirt(SymbolExtensions.GetMethodInfo<Inventory>(_ => _.GetItemCountEffective(default(ItemDef))))))
             {
                 // Duplicate inventory instance
                 foundCursors[0].Emit(OpCodes.Dup);
@@ -50,7 +50,7 @@ namespace RoR2Randomizer.Patches.Item
 
                 cursor.EmitDelegate((Inventory inventory, int autoCastEquipmentItemCount) =>
                 {
-                    return autoCastEquipmentItemCount + inventory.GetItemCount(ContentPackManager.Items.MonsterUseEquipmentDummyItem);
+                    return autoCastEquipmentItemCount + inventory.GetItemCountEffective(ContentPackManager.Items.MonsterUseEquipmentDummyItem);
                 });
 
                 c.Index = cursor.Index + 1;

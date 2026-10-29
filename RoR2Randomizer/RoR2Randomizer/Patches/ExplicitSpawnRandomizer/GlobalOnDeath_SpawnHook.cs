@@ -36,7 +36,7 @@ namespace RoR2Randomizer.Patches.ExplicitSpawnRandomizer
             // Malachite Urchin
             if (c.TryFindNext(out findCursors,
                               x => x.MatchLdstr("Prefabs/CharacterMasters/UrchinTurretMaster"),
-                              x => x.MatchCallOrCallvirt(SymbolExtensions.GetMethodInfo(() => LegacyResourcesAPI.Load<GameObject>(default)))))
+                              x => x.MatchCallOrCallvirt(SymbolExtensions.GetMethodInfo(() => Resources.Load<GameObject>(default)))))
             {
                 ILCursor last = findCursors[findCursors.Length - 1];
                 last.Index++;

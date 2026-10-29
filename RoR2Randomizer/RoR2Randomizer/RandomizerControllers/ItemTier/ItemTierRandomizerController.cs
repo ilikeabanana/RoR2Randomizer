@@ -37,7 +37,9 @@ namespace RoR2Randomizer.RandomizerControllers.Item_Tier
                 ItemDef itemDef = ItemCatalog.GetItemDef(index);
                 if (!itemDef)
                 {
+#if DEBUG
                     Log.Warning($"Null ItemDef at index {index}");
+#endif
                     continue;
                 }
 
@@ -111,6 +113,20 @@ namespace RoR2Randomizer.RandomizerControllers.Item_Tier
             {
                 result = ItemCatalog.GetPerItemBuffer<ItemTier?>();
 
+                if (result == null)
+                {
+#if DEBUG
+                    Log.Error($"GetPerItemBuffer returned null!");
+#endif
+                    return false;
+                }
+
+                if (Instance == null)
+                {
+                    result = null;
+                    return false;
+                }
+
                 IEnumerable<ItemIndex> itemIndicesToRandomize = _itemIndicesToRandomize.Where(static i =>
                 {
                     ItemDef itemDef = ItemCatalog.GetItemDef(i);
@@ -142,7 +158,9 @@ namespace RoR2Randomizer.RandomizerControllers.Item_Tier
                 {
                     if (availableItemTiers.Count == 0)
                     {
+#if DEBUG
                         Log.Error($"collection length mismatch! Ran out of available tiers");
+#endif
                         break;
                     }
 
@@ -155,7 +173,9 @@ namespace RoR2Randomizer.RandomizerControllers.Item_Tier
 
                 if (availableItemTiers.Count > 0)
                 {
+#if DEBUG
                     Log.Error($"collection length mismatch! Ran out of item indices");
+#endif
                 }
 
                 return true;
@@ -212,8 +232,8 @@ namespace RoR2Randomizer.RandomizerControllers.Item_Tier
             PickupIndex pickupIndex = PickupCatalog.FindPickupIndex(item.itemIndex);
             if (!pickupIndex.isValid)
                 return;
-            
-            PickupDef pickupDef = pickupIndex.pickupDef;
+
+            PickupDef pickupDef = PickupCatalog.GetPickupDef(pickupIndex);
             if (pickupDef == null)
                 return;
 
@@ -233,14 +253,10 @@ namespace RoR2Randomizer.RandomizerControllers.Item_Tier
 
         static void tryApplyItemTierReplacements()
         {
-            if (!IsEnabled)
+            if (!IsEnabled && Instance)
                 return;
 
-#if DEBUG
-            Log.Debug("Overriding item tiers");
-#endif
-
-            if (!_overrideItemTiers.HasValue)
+            if (!_overrideItemTiers.HasValue || _overrideItemTiers.Value == null)
             {
                 Log.Warning("Trying to apply item tier replacements, but no override tiers are defined");
                 return;
@@ -251,7 +267,9 @@ namespace RoR2Randomizer.RandomizerControllers.Item_Tier
                 ItemDef itemDef = ItemCatalog.GetItemDef(itemIndex);
                 if (!itemDef)
                 {
+#if DEBUG
                     Log.Warning($"Null ItemDef at index {itemIndex}");
+#endif
                     continue;
                 }
 
@@ -267,9 +285,9 @@ namespace RoR2Randomizer.RandomizerControllers.Item_Tier
                 {
                     static bool itemCorrupts(ItemIndex itemIndex, out int index)
                     {
-                        for (int i = 0; i < ContagiousItemManager._transformationInfos.Length; i++)
+                        for (int i = 0; i < ContagiousItemManager.transformationInfos.Length; i++)
                         {
-                            if (ContagiousItemManager._transformationInfos[i].originalItem == itemIndex)
+                            if (ContagiousItemManager.transformationInfos[i].originalItem == itemIndex)
                             {
                                 index = i;
                                 return true;
@@ -282,31 +300,22 @@ namespace RoR2Randomizer.RandomizerControllers.Item_Tier
 
                     if (originalItemTier == ItemTier.Boss)
                     {
-                        // Turned from boss to non-boss
-                        ContagiousItemManager.itemsToCheck[(int)itemIndex] = false;
-                        ContagiousItemManager.originalToTransformed[(int)itemIndex] = ItemIndex.None;
-
                         if (itemCorrupts(itemIndex, out int i))
                         {
-                            ArrayUtils.ArrayRemoveAtAndResize(ref ContagiousItemManager._transformationInfos, i);
+                            RemoveTransformationInfoAt(i);
                         }
                     }
                     else
                     {
-                        // Turned from non-boss to boss
                         if (!itemCorrupts(itemIndex, out _))
                         {
-                            ContagiousItemManager.itemsToCheck[(int)itemIndex] = true;
-                            ContagiousItemManager.originalToTransformed[(int)itemIndex] = DLC1Content.Items.VoidMegaCrabItem.itemIndex;
-                            ArrayUtils.ArrayAppend(ref ContagiousItemManager._transformationInfos, new ContagiousItemManager.TransformationInfo
+                            AppendTransformationInfo(new ContagiousItemManager.TransformationInfo
                             {
                                 originalItem = itemIndex,
                                 transformedItem = DLC1Content.Items.VoidMegaCrabItem.itemIndex
                             });
                         }
                     }
-
-                    ContagiousItemManager.transformationInfos = new ReadOnlyArray<ContagiousItemManager.TransformationInfo>(ContagiousItemManager._transformationInfos);
                 }
 
 #if DEBUG
@@ -316,7 +325,6 @@ namespace RoR2Randomizer.RandomizerControllers.Item_Tier
 
             Run.instance.BuildDropTable();
 
-            // Hacky way of invoking the onAvailablePickupsModified event
             FieldInfo runPickupsModifiedDelegateField = AccessTools.DeclaredField(typeof(Run), nameof(Run.onAvailablePickupsModified));
             if (runPickupsModifiedDelegateField != null)
             {
@@ -325,22 +333,36 @@ namespace RoR2Randomizer.RandomizerControllers.Item_Tier
             }
             else
             {
+#if DEBUG
                 Log.Error($"{nameof(runPickupsModifiedDelegateField)} is null");
+#endif
             }
+        }
+
+        static void AppendTransformationInfo(ContagiousItemManager.TransformationInfo info)
+        {
+            ContagiousItemManager.TransformationInfo[] backing = ContagiousItemManager.transformationInfos.ToArray();
+            ArrayUtils.ArrayAppend(ref backing, info);
+            ContagiousItemManager.transformationInfos = new ReadOnlyArray<ContagiousItemManager.TransformationInfo>(backing);
+        }
+
+        static void RemoveTransformationInfoAt(int index)
+        {
+            ContagiousItemManager.TransformationInfo[] backing = ContagiousItemManager.transformationInfos.ToArray();
+            ArrayUtils.ArrayRemoveAtAndResize(ref backing, index);
+            ContagiousItemManager.transformationInfos = new ReadOnlyArray<ContagiousItemManager.TransformationInfo>(backing);
         }
 
         static void restoreItemTierReplacements()
         {
-#if DEBUG
-            Log.Debug("Restoring item tiers");
-#endif
-
             foreach (ItemIndex index in ItemCatalog.allItems)
             {
                 ItemDef itemDef = ItemCatalog.GetItemDef(index);
                 if (!itemDef)
                 {
+#if DEBUG
                     Log.Warning($"Null ItemDef at index {index}");
+#endif
                     continue;
                 }
 
@@ -348,8 +370,7 @@ namespace RoR2Randomizer.RandomizerControllers.Item_Tier
                 refreshPickupDef(itemDef);
             }
 
-            ContagiousItemManager._transformationInfos = Array.Empty<ContagiousItemManager.TransformationInfo>();
-            ContagiousItemManager.InitTransformationTable();
+            ContagiousItemManager.transformationInfos = Array.Empty<ContagiousItemManager.TransformationInfo>();
         }
 
         public static ItemTier GetOriginalItemTier(ItemIndex itemIndex)
@@ -359,7 +380,7 @@ namespace RoR2Randomizer.RandomizerControllers.Item_Tier
 
         public static ItemTier GetOverrideItemTier(ItemIndex index)
         {
-            if (IsEnabled && _overrideItemTiers.HasValue)
+            if (IsEnabled && _overrideItemTiers.HasValue && _overrideItemTiers.Value != null)
             {
                 ItemTier? overrideTier = ArrayUtils.GetSafe(_overrideItemTiers.Value, (int)index, null);
                 if (overrideTier.HasValue)

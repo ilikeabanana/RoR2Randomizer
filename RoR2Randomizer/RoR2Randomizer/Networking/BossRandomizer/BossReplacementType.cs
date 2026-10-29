@@ -16,6 +16,10 @@
         LunarScav4,
         AlloyWorshipUnit,
         TeleporterBoss,
+        FalseSonBoss,
+        FalseSonLunar,
+        FalseSonBroken,
+        SolusWing,
         Count
     }
 }

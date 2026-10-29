@@ -108,7 +108,7 @@ namespace RoR2Randomizer.Patches.ItemRandomizer
 
             if (c.TryFindNext(out foundCursors,
                               x => x.MatchLdsfld(typeof(RoR2Content.Items), nameof(RoR2Content.Items.CaptainDefenseMatrix)),
-                              x => x.MatchCallOrCallvirt(SymbolExtensions.GetMethodInfo<Inventory>(_ => _.GiveItem(default(ItemDef), default)))))
+                              x => x.MatchCallOrCallvirt(SymbolExtensions.GetMethodInfo<Inventory>(_ => _.GiveItemPermanent(default(ItemDef), default)))))
             {
                 ILCursor cursor = foundCursors[0];
 
@@ -148,7 +148,7 @@ namespace RoR2Randomizer.Patches.ItemRandomizer
 
             if (c.TryFindNext(out foundCursors,
                               x => x.MatchLdsfld(typeof(RoR2Content.Items), nameof(RoR2Content.Items.CaptainDefenseMatrix)),
-                              x => x.MatchCallOrCallvirt(SymbolExtensions.GetMethodInfo<Inventory>(_ => _.GetItemCount(default(ItemDef))))))
+                              x => x.MatchCallOrCallvirt(SymbolExtensions.GetMethodInfo<Inventory>(_ => _.GetItemCountEffective(default(ItemDef))))))
             {
                 ILCursor cursor = foundCursors[0];
 
@@ -180,7 +180,7 @@ namespace RoR2Randomizer.Patches.ItemRandomizer
 
             if (c.TryFindNext(out foundCursors,
                               x => x.MatchLdsfld(typeof(RoR2Content.Items), nameof(RoR2Content.Items.CaptainDefenseMatrix)),
-                              x => x.MatchCallOrCallvirt(SymbolExtensions.GetMethodInfo<Inventory>(_ => _.GiveItem(default(ItemDef), default)))))
+                              x => x.MatchCallOrCallvirt(SymbolExtensions.GetMethodInfo<Inventory>(_ => _.GiveItemPermanent(default(ItemDef), default)))))
             {
                 ILCursor cursor = foundCursors[0];
 
@@ -206,7 +206,7 @@ namespace RoR2Randomizer.Patches.ItemRandomizer
                 cursor = foundCursors[1];
                 cursor.Index++;
                 cursor.MarkLabel(afterGiveItemLabel);
-            }
+            } 
             else
             {
                 Log.Error("Failed to find GiveItem patch location");

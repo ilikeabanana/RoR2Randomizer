@@ -109,7 +109,7 @@ namespace RoR2Randomizer.Patches.ItemRandomizer
                 ILLabel skipGiveItemLabel = c.DefineLabel();
                 cursor.Emit(OpCodes.Brtrue, skipGiveItemLabel);
 
-                if (cursor.TryGotoNext(MoveType.After, x => x.MatchCallOrCallvirt(SymbolExtensions.GetMethodInfo<Inventory>(_ => _.GiveItem(default(ItemIndex), default)))))
+                if (cursor.TryGotoNext(MoveType.After, x => x.MatchCallOrCallvirt(SymbolExtensions.GetMethodInfo<Inventory>(_ => _.GiveItemPermanent(default(ItemIndex), default)))))
                 {
                     cursor.MarkLabel(skipGiveItemLabel);
                 }
@@ -188,7 +188,7 @@ namespace RoR2Randomizer.Patches.ItemRandomizer
 
                 cursor.Emit(OpCodes.Brtrue, afterGiveItem);
 
-                if (cursor.TryGotoNext(MoveType.After, x => x.MatchCallOrCallvirt(SymbolExtensions.GetMethodInfo<Inventory>(_ => _.GiveItem(default(ItemIndex), default)))))
+                if (cursor.TryGotoNext(MoveType.After, x => x.MatchCallOrCallvirt(SymbolExtensions.GetMethodInfo<Inventory>(_ => _.GiveItemPermanent(default(ItemIndex), default)))))
                 {
                     cursor.MarkLabel(afterGiveItem);
                 }

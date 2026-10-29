@@ -35,7 +35,7 @@ namespace RoR2Randomizer.RandomizerControllers.Projectile.BulletAttackHandling
         {
             TracerEffectIndex = reader.ReadEffectIndex();
             HitEffectIndex = reader.ReadEffectIndex();
-            DamageType = reader.ReadDamageType();
+            DamageType = (DamageType)reader.ReadPackedUInt32();  // was: reader.ReadDamageType()
             Flags = (BulletAttackFlags)reader.ReadPackedUInt32();
             Index = (int)reader.ReadPackedUInt32();
         }
@@ -65,7 +65,7 @@ namespace RoR2Randomizer.RandomizerControllers.Projectile.BulletAttackHandling
         {
             writer.WriteEffectIndex(TracerEffectIndex);
             writer.WriteEffectIndex(HitEffectIndex);
-            writer.Write(DamageType);
+            writer.WritePackedUInt32((uint)DamageType);      // was: writer.Write((int)DamageType)
             writer.WritePackedUInt32((uint)Flags);
             writer.WritePackedUInt32((uint)Index);
         }

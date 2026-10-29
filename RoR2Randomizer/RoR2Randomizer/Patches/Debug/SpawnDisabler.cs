@@ -11,12 +11,12 @@ namespace RoR2Randomizer.Patches.Debug
 
         static void ApplyPatches()
         {
-            On.RoR2.CombatDirector.Spawn += CombatDirector_Spawn;
+            On.RoR2.CombatDirector.Spawn_SpawnCard_EliteDef_Transform_MonsterSpawnDistance_bool_float_PlacementMode_bool += CombatDirector_Spawn;
         }
 
         static void CleanupPatches()
         {
-            On.RoR2.CombatDirector.Spawn -= CombatDirector_Spawn;
+            On.RoR2.CombatDirector.Spawn_SpawnCard_EliteDef_Transform_MonsterSpawnDistance_bool_float_PlacementMode_bool -= CombatDirector_Spawn;
         }
 
         public static void ToggleSpawnsDisabled()
@@ -25,12 +25,12 @@ namespace RoR2Randomizer.Patches.Debug
             Chat.AddMessage($"Spawns {(_spawnsDisabled ? "Disabled" : "Enabled")}");
         }
 
-        static bool CombatDirector_Spawn(On.RoR2.CombatDirector.orig_Spawn orig, CombatDirector self, SpawnCard spawnCard, EliteDef eliteDef, Transform spawnTarget, DirectorCore.MonsterSpawnDistance spawnDistance, bool preventOverhead, float valueMultiplier, DirectorPlacementRule.PlacementMode placementMode)
+        static bool CombatDirector_Spawn(On.RoR2.CombatDirector.orig_Spawn_SpawnCard_EliteDef_Transform_MonsterSpawnDistance_bool_float_PlacementMode_bool orig, CombatDirector self, SpawnCard spawnCard, EliteDef eliteDef, Transform spawnTarget, DirectorCore.MonsterSpawnDistance spawnDistance, bool preventOverhead, float valueMultiplier, DirectorPlacementRule.PlacementMode placementMode, bool singleScaledBoss)
         {
             if (_spawnsDisabled)
                 return false;
 
-            return orig(self, spawnCard, eliteDef, spawnTarget, spawnDistance, preventOverhead, valueMultiplier, placementMode);
+            return orig(self, spawnCard, eliteDef, spawnTarget, spawnDistance, preventOverhead, valueMultiplier, placementMode, singleScaledBoss);
         }
     }
 }

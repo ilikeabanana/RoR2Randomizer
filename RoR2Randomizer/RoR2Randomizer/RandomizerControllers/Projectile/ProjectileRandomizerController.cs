@@ -72,10 +72,14 @@ namespace RoR2Randomizer.RandomizerControllers.Projectile
                                          case "ToolbotDroneStun": // Does nothing
                                          case "TreebotPounderProjectile": // Does nothing
                                          case "TreebotFlower1": // Does nothing
-
+                                         case "ChefCleaverProjectile": // Assumes owner has a ChefController
+                                         case "ChefCleaver": // Same thing ig?
                                          // Excluded because I think it's more fun that way
                                          case "MageIcewallWalkerProjectile":
                                          case "MageFirewallWalkerProjectile":
+                                         case "ThrownObjectProjectile":
+                                         case "ThrownObjectProjectileNoStun":
+                                         case "HaulerThrowProjectile":
 
                                          // Excluded because it seems like a huge pain getting it to work, might look into it in the future.
                                          case "LunarSunProjectile":
@@ -88,7 +92,7 @@ namespace RoR2Randomizer.RandomizerControllers.Projectile
 #if DEBUG
                                      if (projectile.TryGetComponent<ProjectileSpawnMaster>(out ProjectileSpawnMaster projectileSpawnMaster))
                                      {
-                                         Log.Debug($"{projectile.name} spawns {projectileSpawnMaster.spawnCard} ({projectileSpawnMaster.spawnCard?.prefab})");
+                                         Log.Debug($"{projectile.name} spawns {projectileSpawnMaster} ({projectileSpawnMaster.gameObject})");
                                      }
 
                                      if (projectileFireChildren)
@@ -119,6 +123,9 @@ namespace RoR2Randomizer.RandomizerControllers.Projectile
 
             identifiers = identifiers.AddItem(ProjectileTypeIdentifier.SpiteBomb);
 
+            // Ensure all identifiers are strictly unique to prevent duplicate key dictionary crashes on clients
+            identifiers = identifiers.Distinct();
+
             if (ConfigManager.ProjectileRandomizer.ExcludeInstakillProjeciles)
             {
                 identifiers = identifiers.Where(static i =>
@@ -139,7 +146,7 @@ namespace RoR2Randomizer.RandomizerControllers.Projectile
 
         static readonly RunSpecific<ReplacementDictionary<ProjectileTypeIdentifier>> _projectileIndicesReplacements = new RunSpecific<ReplacementDictionary<ProjectileTypeIdentifier>>((out ReplacementDictionary<ProjectileTypeIdentifier> result) =>
         {
-            if (shouldBeActive)
+            if (shouldBeActive && Instance)
             {
                 result = ReplacementDictionary<ProjectileTypeIdentifier>.CreateFrom(getAllProjectileIdentifiers(), Instance.RNG);
                 return true;
@@ -150,6 +157,7 @@ namespace RoR2Randomizer.RandomizerControllers.Projectile
         });
 
         static readonly RunSpecific<Dictionary<ProjectileTypeIdentifier, ProjectileTypeIdentifier>> _appendedProjectileReplacements = new RunSpecific<Dictionary<ProjectileTypeIdentifier, ProjectileTypeIdentifier>>();
+
 
         static readonly RunSpecific<bool> _shouldRandomizeHitscanServer = new RunSpecific<bool>((out bool result) =>
         {
@@ -175,6 +183,7 @@ namespace RoR2Randomizer.RandomizerControllers.Projectile
         protected override bool isNetworked => true;
 
         static bool _replacingTempDisabled = false;
+
 
         protected override IEnumerable<NetworkMessageBase> getNetMessages()
         {
@@ -225,11 +234,11 @@ namespace RoR2Randomizer.RandomizerControllers.Projectile
 
                 if (!NetworkServer.dontListen)
                 {
+                    // Ensure this replacement is sent to clients immediately!
                     new SyncProjectileReplacements(new ReplacementDictionary<ProjectileTypeIdentifier>(_appendedProjectileReplacements.Value), true).SendTo(NetworkDestination.Clients);
                 }
             }
         }
-
         static void BulletAttackCatalog_OnIdentifierAppendedServer(in BulletAttackIdentifier identifier)
         {
             if (Run.instance && NetworkServer.active)
@@ -487,7 +496,7 @@ namespace RoR2Randomizer.RandomizerControllers.Projectile
                             if (hookStateMachine.state is EntityStates.Loader.FireHook fireHook)
                             {
                                 // Force Hook to retract next update
-                                fireHook.hadHookInstance = true;
+                                //fireHook.hadHookInstance = true; Commented out
                             }
                         }
                         else
@@ -537,17 +546,20 @@ namespace RoR2Randomizer.RandomizerControllers.Projectile
         {
             if (IsActive)
             {
+#if DEBUG
+        ProjectileTypeIdentifier debugId = ConfigManager.ProjectileRandomizer.DebugProjectileIdentifier;
+        Log.Debug($"[OverrideCheck] original={original}, DebugProjectileIdentifier={debugId}, IsValid={debugId.IsValid}");
+#endif
                 if (
 #if DEBUG
-                    (replacement = ConfigManager.ProjectileRandomizer.DebugProjectileIdentifier).IsValid ||
+            (replacement = ConfigManager.ProjectileRandomizer.DebugProjectileIdentifier).IsValid ||
 #endif
                     _projectileIndicesReplacements.Value.TryGetReplacement(original, out replacement) ||
                     (_appendedProjectileReplacements.HasValue && _appendedProjectileReplacements.Value.TryGetValue(original, out replacement)))
                 {
 #if DEBUG
-                    Log.Debug($"Replaced projectile {original} -> {replacement}");
+                    Log.Debug($"[OverrideCheck] RESOLVED original={original} -> replacement={replacement}");
 #endif
-
                     return true;
                 }
             }

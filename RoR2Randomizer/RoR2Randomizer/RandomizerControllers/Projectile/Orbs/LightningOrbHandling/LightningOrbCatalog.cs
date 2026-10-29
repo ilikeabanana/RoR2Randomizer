@@ -40,6 +40,7 @@ namespace RoR2Randomizer.RandomizerControllers.Projectile.Orbs.LightningOrbHandl
 
             for (LightningOrb.LightningType i = 0; i < LightningOrb.LightningType.Count; i++)
             {
+                break;
                 initIdentifier(i, i switch
                 {
                     LightningOrb.LightningType.Ukulele => 2U,

@@ -237,7 +237,7 @@ namespace RoR2Randomizer.Patches.BuffRandomizer
 
                         for (int i = 0; i < diff; i++)
                         {
-                            DotController.InflictDot(self.gameObject, attacker, dot, duration);
+                            DotController.InflictDot(self.gameObject, attacker, dot, duration, 0, 1);
                         }
 
                         DotRandomizerPatch.SkipApplyBuffCount--;

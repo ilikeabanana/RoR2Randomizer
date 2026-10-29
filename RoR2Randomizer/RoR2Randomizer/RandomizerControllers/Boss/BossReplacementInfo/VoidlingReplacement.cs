@@ -35,6 +35,8 @@ namespace RoR2Randomizer.RandomizerControllers.Boss.BossReplacementInfo
         {
             base.bodyResolved();
 
+            
+
             _body.bodyFlags |= CharacterBody.BodyFlags.IgnoreFallDamage;
             
             CharacterDeathBehavior deathBehavior = _body.gameObject.GetOrAddComponent<CharacterDeathBehavior>();

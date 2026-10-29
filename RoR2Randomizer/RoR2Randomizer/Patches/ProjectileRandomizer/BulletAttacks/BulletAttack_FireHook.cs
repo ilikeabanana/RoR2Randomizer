@@ -12,23 +12,24 @@ namespace RoR2Randomizer.Patches.ProjectileRandomizer.BulletAttacks
             On.RoR2.BulletAttack.FireSingle += BulletAttack_FireSingle;
         }
 
+
         static void Cleanup()
         {
             On.RoR2.BulletAttack.FireSingle -= BulletAttack_FireSingle;
         }
 
-        static void BulletAttack_FireSingle(On.RoR2.BulletAttack.orig_FireSingle orig, BulletAttack self, Vector3 normal, int muzzleIndex)
+        static void BulletAttack_FireSingle(On.RoR2.BulletAttack.orig_FireSingle orig, BulletAttack self, BulletAttack.FireSingleArgs args)
         {
-            if (ProjectileRandomizerController.TryReplaceFire(self, normal))
+            if (ProjectileRandomizerController.TryReplaceFire(self, args.ray.direction))
             {
 #if DEBUG
-                Log.Debug($"{nameof(normal)}={normal}");
+                Log.Debug($"{nameof(args.ray.direction)}={args.ray.direction}");
 #endif
 
                 return;
             }
 
-            orig(self, normal, muzzleIndex);
+            orig(self, args);
         }
     }
 }

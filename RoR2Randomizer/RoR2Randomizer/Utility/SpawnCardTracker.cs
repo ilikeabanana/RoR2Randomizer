@@ -10,8 +10,11 @@ namespace RoR2Randomizer.Utility
         public static SpawnCard[] MithrixPhase2SpawnCards;
 
         public static SpawnCard[] VoidlingPhasesSpawnCards;
+        public static SpawnCard[] FalseSonPhasesSpawnCards;
 
         public static SpawnCard AurelioniteSpawnCard;
+
+        public static SpawnCard SolusWingSpawnCard;
 
         public static MultiCharacterSpawnCard LunarScavSpawnCard;
 
@@ -37,6 +40,11 @@ namespace RoR2Randomizer.Utility
         public static bool IsAnyVoidlingPhase(SpawnCard card)
         {
             return isPartOf(VoidlingPhasesSpawnCards, card, out _);
+        }
+
+        public static bool IsAnyFalseSonPhase(SpawnCard card)
+        {
+            return card.name.Contains("FalseSon");
         }
     }
 }

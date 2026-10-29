@@ -94,6 +94,10 @@ namespace RoR2Randomizer.RandomizerControllers
                 case "EngiBeamTurretMaster": // Seems to ignore the player
                 case "MinorConstructAttachableMaster": // Instantly dies
                 case "VoidRaidCrabJointMaster": // Balls
+                case "SolusHeartMaster": // ... Yeah i don't know what's wrong with this one it just breaks thats all
+                case "SolusHeartMaster_Offering": // Can't be used
+                case "SolusVendorMaster": // Can't be killed
+                case "ExhaustPortWeakpointMaster": // annoying
                 case "VoidRaidCrabMaster": // Beta voidling, half invisible
 #if DEBUG
                     Log.Debug($"excluding master {masterPrefab.name}: blacklist");

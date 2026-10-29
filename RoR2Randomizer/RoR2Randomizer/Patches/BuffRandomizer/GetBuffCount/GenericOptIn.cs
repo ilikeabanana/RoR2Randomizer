@@ -92,8 +92,8 @@ namespace RoR2Randomizer.Patches.BuffRandomizer
 
                 IL.RoR2.CharacterBody.AddTimedBuff_BuffDef_float += CharacterBody_HasBuff_BuffDef_Manipulator;
 
-                IL.RoR2.CharacterBody.ElementalRingsBehavior.FixedUpdate += CharacterBody_HasBuff_BuffDef_Manipulator;
-                IL.RoR2.CharacterBody.ElementalRingsBehavior.OnDisable += CharacterBody_HasBuff_BuffDef_Manipulator;
+                IL.RoR2.Items.ElementalRingsBehavior.FixedUpdate += CharacterBody_HasBuff_BuffDef_Manipulator;
+                IL.RoR2.Items.ElementalRingsBehavior.OnDisable += CharacterBody_HasBuff_BuffDef_Manipulator;
 
                 IL.RoR2.ElementalRingVoidBehavior.FixedUpdate += CharacterBody_HasBuff_BuffDef_Manipulator;
                 IL.RoR2.ElementalRingVoidBehavior.OnDisable += CharacterBody_HasBuff_BuffDef_Manipulator;
@@ -137,8 +137,8 @@ namespace RoR2Randomizer.Patches.BuffRandomizer
 
                 IL.RoR2.CharacterBody.AddTimedBuff_BuffDef_float -= CharacterBody_HasBuff_BuffDef_Manipulator;
 
-                IL.RoR2.CharacterBody.ElementalRingsBehavior.FixedUpdate -= CharacterBody_HasBuff_BuffDef_Manipulator;
-                IL.RoR2.CharacterBody.ElementalRingsBehavior.OnDisable -= CharacterBody_HasBuff_BuffDef_Manipulator;
+                IL.RoR2.Items.ElementalRingsBehavior.FixedUpdate -= CharacterBody_HasBuff_BuffDef_Manipulator;
+                IL.RoR2.Items.ElementalRingsBehavior.OnDisable -= CharacterBody_HasBuff_BuffDef_Manipulator;
 
                 IL.RoR2.ElementalRingVoidBehavior.FixedUpdate -= CharacterBody_HasBuff_BuffDef_Manipulator;
                 IL.RoR2.ElementalRingVoidBehavior.OnDisable -= CharacterBody_HasBuff_BuffDef_Manipulator;

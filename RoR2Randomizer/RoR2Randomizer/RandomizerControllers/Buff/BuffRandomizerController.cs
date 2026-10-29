@@ -68,7 +68,7 @@ namespace RoR2Randomizer.RandomizerControllers.Buff
 
         static readonly RunSpecific<IndexReplacementsCollection> _buffReplacements = new RunSpecific<IndexReplacementsCollection>((out IndexReplacementsCollection result) =>
         {
-            if (shouldBeActive)
+            if (shouldBeActive && Instance)
             {
                 IEnumerable<BuffDef> buffsToRandomize = _validBuffDefs.Where(b =>
                 {

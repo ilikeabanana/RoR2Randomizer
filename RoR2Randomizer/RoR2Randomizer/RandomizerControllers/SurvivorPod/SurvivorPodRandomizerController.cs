@@ -36,7 +36,7 @@ namespace RoR2Randomizer.RandomizerControllers.SurvivorPod
 
         static readonly RunSpecific<Dictionary<BodyIndex, SpawnPodPrefabData>> _overrideSpawnPodPrefabs = new RunSpecific<Dictionary<BodyIndex, SpawnPodPrefabData>>((out Dictionary<BodyIndex, SpawnPodPrefabData> result) =>
         {
-            if (shouldBeActive)
+            if (shouldBeActive && Instance)
             {
                 result = new Dictionary<BodyIndex, SpawnPodPrefabData>();
 

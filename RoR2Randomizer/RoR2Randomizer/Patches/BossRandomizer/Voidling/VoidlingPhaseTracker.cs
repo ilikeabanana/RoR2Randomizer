@@ -51,7 +51,7 @@ namespace RoR2Randomizer.Patches.BossRandomizer.Voidling
             On.RoR2.ScriptedCombatEncounter.BeginEncounter -= ScriptedCombatEncounter_BeginEncounter;
             On.EntityStates.VoidRaidCrab.DeathState.OnEnter -= DeathState_OnEnter;
         }
-        
+
         static void VoidRaidGauntletController_Start(On.RoR2.VoidRaidGauntletController.orig_Start orig, VoidRaidGauntletController self)
         {
             orig(self);

@@ -15,7 +15,7 @@ namespace RoR2Randomizer.Patches.BuffRandomizer
             On.RoR2.DotController.OnDotStackRemovedServer += DotController_OnDotStackRemovedServer;
         }
 
-        static void DotController_OnDotStackRemovedServer(On.RoR2.DotController.orig_OnDotStackRemovedServer orig, DotController self, object dotStack)
+        static void DotController_OnDotStackRemovedServer(On.RoR2.DotController.orig_OnDotStackRemovedServer orig, DotController self, DotController.DotStack dotStack)
         {
             BuffIndexPatch.SkipPatchCount++;
 

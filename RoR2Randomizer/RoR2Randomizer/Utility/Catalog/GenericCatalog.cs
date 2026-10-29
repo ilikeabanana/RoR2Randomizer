@@ -63,9 +63,16 @@ namespace RoR2Randomizer.Utility.Catalog
         {
             foreach (TIdentifier existingIdentifier in _identifiers.Take(_identifiersCount))
             {
-                if (existingIdentifier.Matches(obj))
+                bool isMatch = existingIdentifier.Matches(obj);
+#if DEBUG
+                Log.Debug(LOG_PREFIX_TYPE + $"[MatchCheck] candidate={existingIdentifier}, isMatch={isMatch}");
+#endif
+                if (isMatch)
                 {
                     identifier = existingIdentifier;
+#if DEBUG
+                    Log.Debug(LOG_PREFIX_TYPE + $"[MatchCheck] MATCHED obj against {existingIdentifier}");
+#endif
                     return true;
                 }
             }
